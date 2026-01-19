@@ -1,0 +1,44 @@
+[
+    {
+        "id": "IT101",
+        "name": "مقدمة في البرمجة",
+        "stage": "1",
+        "description": "مقدمة في أساسيات البرمجة والخوارزميات",
+        "resourcesCount": 2
+    },
+    {
+        "id": "IT102",
+        "name": "الرياضيات المنفصلة",
+        "stage": "1",
+        "description": "الأسس الرياضية للحوسبة",
+        "resourcesCount": 1
+    },
+    {
+        "id": "IT103",
+        "name": "مبادئ قواعد البيانات",
+        "stage": "1",
+        "description": "مقدمة في نظم قواعد البيانات",
+        "resourcesCount": 0
+    },
+    {
+        "id": "IT104",
+        "name": "أساسيات الشبكات",
+        "stage": "1",
+        "description": "مقدمة في شبكات الحاسوب",
+        "resourcesCount": 0
+    },
+    {
+        "id": "IT105",
+        "name": "هيكلة البيانات",
+        "stage": "1",
+        "description": "الهياكل الأساسية للبيانات",
+        "resourcesCount": 0
+    },
+    {
+        "id": "IT106",
+        "name": "نظم التشغيل",
+        "stage": "1",
+        "description": "مبادئ نظم تشغيل الحاسوب",
+        "resourcesCount": 0
+    }
+]

@@ -1,0 +1,22 @@
+[
+    {
+        "id": "R001",
+        "subjectId": "IT101",
+        "title": "كتاب مقدمة في البرمجة",
+        "type": "pdf",
+        "url": "#",
+        "description": "كتاب شامل للمفاهيم الأساسية",
+        "uploadDate": "2023-09-15",
+        "size": "2.4 MB"
+    },
+    {
+        "id": "R002",
+        "subjectId": "IT101",
+        "title": "تمارين محلولة",
+        "type": "docx",
+        "url": "#",
+        "description": "مجموعة تمارين مع الحلول",
+        "uploadDate": "2023-09-20",
+        "size": "1.8 MB"
+    }
+]

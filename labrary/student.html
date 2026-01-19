@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="icon" type="image/png" href="img/logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة الطالب - IT Library</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="student-page">
+
+<!-- شريط التنقل للطالب -->
+<header class="student-navbar">
+    <div class="container">
+        <div class="student-info">
+            <div class="student-avatar">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <div class="student-details">
+                <h1 id="studentName">اسم الطالب</h1>
+                <span class="student-stage" id="studentStage">المرحلة الأولى</span>
+            </div>
+        </div>
+        
+        <nav class="student-nav">
+            <a href="student.html" class="student-nav-link active">
+                <i class="fas fa-home"></i> المواد
+            </a>
+            <a href="#resources" class="student-nav-link">
+                <i class="fas fa-folder-open"></i> المصادر
+            </a>
+            <a href="index.html" class="student-nav-link logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+            </a>
+        </nav>
+    </div>
+</header>
+
+<main class="student-main">
+    <div class="container">
+        
+        <!-- مواد المرحلة -->
+        <section class="student-section">
+            <h2 class="student-section-title">
+                <i class="fas fa-book"></i> مواد المرحلة <span id="currentStudentStage">الأولى</span>
+            </h2>
+            
+            <div class="student-subjects-grid" id="studentSubjectsGrid">
+                <!-- سيتم تعبئته بالجافاسكريبت -->
+            </div>
+        </section>
+        
+        <!-- المصادر -->
+        <section id="resources" class="student-section">
+            <h2 class="student-section-title">
+                <i class="fas fa-folder-open"></i> المصادر المتاحة
+            </h2>
+            
+            <div class="resources-filter">
+                <div class="filter-group">
+                    <label for="studentSubjectFilter"><i class="fas fa-filter"></i> تصفية حسب المادة:</label>
+                    <select id="studentSubjectFilter">
+                        <option value="">جميع المواد</option>
+                        <!-- سيتم تعبئته بالجافاسكريبت -->
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="resourceTypeFilter"><i class="fas fa-filter"></i> تصفية حسب النوع:</label>
+                    <select id="resourceTypeFilter">
+                        <option value="">جميع الأنواع</option>
+                        <option value="pdf">PDF</option>
+                        <option value="docx">Word</option>
+                        <option value="ppt">عروض تقديمية</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="student-resources-grid" id="studentResourcesGrid">
+                <!-- سيتم تعبئته بالجافاسكريبت -->
+            </div>
+        </section>
+    </div>
+</main>
+
+<script src="js/main.js"></script>
+<script>
+    // تحميل بيانات الطالب
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        
+        if (!currentUser) {
+            window.location.href = 'login.html';
+            return;
+        }
+        
+        // إذا كان المستخدم إدمن، توجيه إلى لوحة الإدارة
+        if (currentUser.stage === 'admin') {
+            window.location.href = 'admin.html';
+            return;
+        }
+        
+        // تحديث معلومات الطالب
+        document.getElementById('studentName').textContent = currentUser.fullName;
+        const stageNames = { '1': 'الأولى', '2': 'الثانية', '3': 'الثالثة', '4': 'الرابعة' };
+        document.getElementById('studentStage').textContent = `المرحلة ${stageNames[currentUser.stage]}`;
+        document.getElementById('currentStudentStage').textContent = stageNames[currentUser.stage];
+        
+        // تحميل المواد والمصادر الخاصة بالمرحلة
+        loadStudentData(currentUser.stage);
+    });
+    
+    function loadStudentData(stage) {
+        // تحميل المواد من localStorage
+        const subjects = JSON.parse(localStorage.getItem('itlibrary_subjects') || '[]');
+        const resources = JSON.parse(localStorage.getItem('itlibrary_resources') || '[]');
+        
+        // تصفية المواد حسب المرحلة
+        const stageSubjects = subjects.filter(subject => subject.stage === stage);
+        
+        // عرض المواد
+        displayStudentSubjects(stageSubjects);
+        // عرض المصادر
+        displayStudentResources(resources, stageSubjects);
+    }
+    
+    function displayStudentSubjects(subjects) {
+        const grid = document.getElementById('studentSubjectsGrid');
+        const filter = document.getElementById('studentSubjectFilter');
+        
+        if (!grid) return;
+        
+        grid.innerHTML = '';
+        filter.innerHTML = '<option value="">جميع المواد</option>';
+        
+        subjects.forEach(subject => {
+            // إضافة المادة للمصفوفة
+            const subjectCard = document.createElement('div');
+            subjectCard.className = 'subject-card';
+            subjectCard.innerHTML = `
+                <div class="subject-card-header">
+                    <h3>${subject.id}</h3>
+                    <span class="subject-type">مادة</span>
+                </div>
+                <div class="subject-card-body">
+                    <h4>${subject.name}</h4>
+                    <p>${subject.description}</p>
+                    <p class="resource-count">عدد المصادر: ${subject.resourcesCount}</p>
+                </div>
+                <div class="subject-card-footer">
+                    <button class="btn-view-subject" onclick="filterBySubject('${subject.id}')">
+                        <i class="fas fa-eye"></i> عرض المصادر
+                    </button>
+                </div>
+            `;
+            grid.appendChild(subjectCard);
+            
+            // إضافة للفلتر
+            const option = document.createElement('option');
+            option.value = subject.id;
+            option.textContent = `${subject.id} - ${subject.name}`;
+            filter.appendChild(option);
+        });
+        
+        // إضافة حدث للفلتر
+        filter.addEventListener('change', function() {
+            const selectedSubject = this.value;
+            const resources = JSON.parse(localStorage.getItem('itlibrary_resources') || '[]');
+            const subjects = JSON.parse(localStorage.getItem('itlibrary_subjects') || '[]');
+            
+            let filteredResources = resources;
+            if (selectedSubject) {
+                filteredResources = resources.filter(resource => resource.subjectId === selectedSubject);
+            }
+            
+            displayStudentResources(filteredResources, subjects);
+        });
+    }
+    
+    function displayStudentResources(resources, subjects) {
+        const grid = document.getElementById('studentResourcesGrid');
+        if (!grid) return;
+        
+        grid.innerHTML = '';
+        
+        // فلترة حسب النوع إذا كان محدد
+        const typeFilter = document.getElementById('resourceTypeFilter');
+        let filteredResources = resources;
+        
+        if (typeFilter && typeFilter.value) {
+            filteredResources = resources.filter(resource => resource.type === typeFilter.value);
+        }
+        
+        filteredResources.forEach(resource => {
+            const subject = subjects.find(s => s.id === resource.subjectId);
+            if (!subject) return;
+            
+            const resourceCard = document.createElement('div');
+            resourceCard.className = 'resource-card';
+            
+            let typeIcon = 'fa-file';
+            let typeClass = '';
+            if (resource.type === 'pdf') {
+                typeIcon = 'fa-file-pdf';
+                typeClass = 'pdf';
+            } else if (resource.type === 'docx') {
+                typeIcon = 'fa-file-word';
+                typeClass = 'doc';
+            } else if (resource.type === 'ppt') {
+                typeIcon = 'fa-file-powerpoint';
+                typeClass = 'ppt';
+            }
+            
+            resourceCard.innerHTML = `
+                <div class="resource-card-header ${typeClass}">
+                    <i class="fas ${typeIcon}"></i>
+                    <span class="resource-type">${resource.type.toUpperCase()}</span>
+                </div>
+                <div class="resource-card-body">
+                    <h4>${resource.title}</h4>
+                    <p class="resource-subject"><i class="fas fa-book"></i> ${subject.name}</p>
+                    <p class="resource-description">${resource.description}</p>
+                    <p class="resource-meta">
+                        <small><i class="far fa-calendar"></i> ${resource.uploadDate} | <i class="fas fa-weight"></i> ${resource.size}</small>
+                    </p>
+                </div>
+                <div class="resource-card-footer">
+                    <a href="${resource.url}" class="btn-download" download="${resource.title}">
+                        <i class="fas fa-download"></i> تحميل
+                    </a>
+                </div>
+            `;
+            grid.appendChild(resourceCard);
+        });
+        
+        // إضافة حدث للفلتر حسب النوع
+        if (typeFilter) {
+            typeFilter.addEventListener('change', function() {
+                const resources = JSON.parse(localStorage.getItem('itlibrary_resources') || '[]');
+                const subjects = JSON.parse(localStorage.getItem('itlibrary_subjects') || '[]');
+                displayStudentResources(resources, subjects);
+            });
+        }
+    }
+    
+    function filterBySubject(subjectId) {
+        const filter = document.getElementById('studentSubjectFilter');
+        filter.value = subjectId;
+        filter.dispatchEvent(new Event('change'));
+    }
+</script>
+<!-- حقوق النشر -->
+<div class="copyright">
+    <p>© 2023 IT Library. جميع الحقوق محفوظة.</p>
+    <p>مرحباً بك في المكتبة التقنية - المرحلة الدراسية</p>
+    <p>للاستخدام الشخصي والتعليمي فقط</p>
+</div>
+</body>
+</html>

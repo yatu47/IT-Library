@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "username": "ahmed123",
+        "password": "password123",
+        "fullName": "أحمد محمد علي",
+        "stage": "1",
+        "createdAt": "2023-01-15"
+    },
+    {
+        "id": 2,
+        "username": "sara456",
+        "password": "password456",
+        "fullName": "سارة خالد حسن",
+        "stage": "2",
+        "createdAt": "2023-02-20"
+    },
+    {
+        "id": 3,
+        "username": "admin",
+        "password": "admin123",
+        "fullName": "مسؤول النظام",
+        "stage": "admin",
+        "createdAt": "2023-01-01"
+    }
+]

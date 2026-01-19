@@ -1,0 +1,22 @@
+it-library/
+│
+├── index.html              (الصفحة الرئيسية)
+├── login.html              (تسجيل الدخول للطلاب والإدارة)
+├── student.html            (واجهة الطالب)
+├── admin.html              (لوحة الإدارة - بعد تسجيل دخول الإدارة)
+│
+├── css/
+│   └── style.css           (التنسيقات الكاملة)
+│
+├── js/
+│   └── main.js             (الجافاسكريبت الكامل)
+│
+├── data/
+│   ├── users.json          (المستخدمين)
+│   ├── subjects.json       (المواد)
+│   └── resources.json      (المصادر)
+│
+└── uploads/                (مجلد لرفع الملفات)
+    ├── pdfs/
+    ├── docs/
+    └── images/

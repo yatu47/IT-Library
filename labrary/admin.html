@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="icon" type="image/png" href="img/logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة الإدارة - IT Library</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-page">
+
+<!-- شريط التنقل الإداري -->
+<header class="admin-navbar">
+    <div class="container">
+        <div class="admin-logo">
+            <i class="fas fa-user-shield"></i>
+            <div>
+                <h1>لوحة إدارة IT Library</h1>
+                <span class="admin-subtitle">مرحباً، مسؤول النظام</span>
+            </div>
+        </div>
+        
+        <nav class="admin-nav">
+            <a href="admin.html" class="admin-nav-link active">
+                <i class="fas fa-home"></i> الرئيسية
+            </a>
+            <a href="#subjects" class="admin-nav-link">
+                <i class="fas fa-book"></i> إدارة المواد
+            </a>
+            <a href="#resources" class="admin-nav-link">
+                <i class="fas fa-file-upload"></i> رفع مصادر
+            </a>
+            <a href="index.html" class="admin-nav-link logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> الخروج
+            </a>
+        </nav>
+    </div>
+</header>
+
+<main class="admin-main">
+    <div class="container">
+        
+        <!-- إحصائيات سريعة -->
+        <div class="admin-stats">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="usersCount">0</h3>
+                    <p>عدد الطلاب</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="subjectsCount">0</h3>
+                    <p>عدد المواد</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="resourcesCount">0</h3>
+                    <p>عدد المصادر</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- قسم إدارة المواد -->
+        <section id="subjects" class="admin-section">
+            <h2 class="admin-section-title">
+                <i class="fas fa-book"></i> إدارة المواد الدراسية
+            </h2>
+            
+            <div class="section-actions">
+                <button class="btn btn-primary" id="addSubjectBtn">
+                    <i class="fas fa-plus"></i> إضافة مادة جديدة
+                </button>
+            </div>
+            
+            <div class="stage-tabs">
+                <button class="stage-tab active" data-stage="1">المرحلة الأولى</button>
+                <button class="stage-tab" data-stage="2">المرحلة الثانية</button>
+                <button class="stage-tab" data-stage="3">المرحلة الثالثة</button>
+                <button class="stage-tab" data-stage="4">المرحلة الرابعة</button>
+            </div>
+            
+            <!-- جدول المواد -->
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>رمز المادة</th>
+                            <th>اسم المادة</th>
+                            <th>النبذة</th>
+                            <th>عدد المصادر</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subjectsTableBody">
+                        <!-- سيتم تعبئته بالجافاسكريبت -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        
+        <!-- قسم رفع المصادر -->
+        <section id="resources" class="admin-section">
+            <h2 class="admin-section-title">
+                <i class="fas fa-file-upload"></i> رفع مصادر جديدة
+            </h2>
+            
+            <form id="uploadResourceForm" class="upload-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="uploadSubject"><i class="fas fa-book"></i> المادة *</label>
+                        <select id="uploadSubject" required>
+                            <option value="">اختر المادة</option>
+                            <!-- سيتم تعبئته بالجافاسكريبت -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="resourceTitle"><i class="fas fa-heading"></i> عنوان المصدر *</label>
+                        <input type="text" id="resourceTitle" placeholder="مثال: كتاب البرمجة" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="resourceType"><i class="fas fa-file"></i> نوع الملف *</label>
+                        <select id="resourceType" required>
+                            <option value="">اختر النوع</option>
+                            <option value="pdf">PDF</option>
+                            <option value="docx">Word</option>
+                            <option value="ppt">PowerPoint</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="resourceFile"><i class="fas fa-upload"></i> رفع الملف *</label>
+                        <div class="file-upload">
+                            <input type="file" id="resourceFile" accept=".pdf,.docx,.doc,.ppt,.pptx" required>
+                            <label for="resourceFile" class="file-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>اختر ملف</span>
+                            </label>
+                            <span class="file-name" id="fileName">لم يتم اختيار ملف</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="resourceDescription"><i class="fas fa-align-left"></i> وصف المصدر</label>
+                    <textarea id="resourceDescription" rows="3" placeholder="وصف مختصر للمصدر..."></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-upload">
+                    <i class="fas fa-upload"></i> رفع المصدر
+                </button>
+            </form>
+            
+            <!-- قائمة المصادر -->
+            <div class="resources-list" id="resourcesList">
+                <h3><i class="fas fa-list"></i> المصادر المرفوعة</h3>
+                <div class="resources-grid" id="adminResourcesGrid">
+                    <!-- سيتم تعبئته بالجافاسكريبت -->
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<!-- نافذة إضافة مادة -->
+<div id="subjectModal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-book"></i> إضافة مادة جديدة</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="subjectForm">
+                <div class="form-group">
+                    <label for="subjectCode">رمز المادة *</label>
+                    <input type="text" id="subjectCode" placeholder="مثال: IT101" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subjectName">اسم المادة *</label>
+                    <input type="text" id="subjectName" placeholder="مثال: مقدمة في البرمجة" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="modalSubjectStage">المرحلة *</label>
+                    <select id="modalSubjectStage" required>
+                        <option value="1">المرحلة الأولى</option>
+                        <option value="2">المرحلة الثانية</option>
+                        <option value="3">المرحلة الثالثة</option>
+                        <option value="4">المرحلة الرابعة</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subjectDescription">نبذة عن المادة *</label>
+                    <textarea id="subjectDescription" rows="4" placeholder="وصف مختصر للمادة..." required></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">حفظ المادة</button>
+                    <button type="button" class="btn btn-secondary close-modal">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+    // تحميل بيانات الإدارة
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        
+        if (!currentUser || currentUser.stage !== 'admin') {
+            window.location.href = 'login.html';
+            return;
+        }
+        
+        // تحميل الإحصائيات
+        loadAdminStats();
+        
+        // تحميل المواد
+        loadAdminSubjects();
+        
+        // تحميل قائمة المواد للرفع
+        loadSubjectsForUpload();
+        
+        // تحميل المصادر
+        loadAdminResources();
+        
+        // أحداث الأزرار
+        setupAdminEvents();
+    });
+    
+    function loadAdminStats() {
+        const users = JSON.parse(localStorage.getItem('itlibrary_users') || '[]');
+        const subjects = JSON.parse(localStorage.getItem('itlibrary_subjects') || '[]');
+        const resources = JSON.parse(localStorage.getItem('itlibrary_resources') || '[]');
+        
+        // حساب عدد الطلاب (بدون حساب الإدمن)
+        const studentsCount = users.filter(user => user.stage !== 'admin').length;
+        
+        document.getElementById('usersCount').textContent = studentsCount;
+        document.getElementById('subjectsCount').textContent = subjects.length;
+        document.getElementById('resourcesCount').textContent = resources.length;
+    }
+    
+    function loadAdminSubjects() {
+        const subjects = JSON.parse(localStorage.getItem('itlibrary_subjects') || '[]');
+        displaySubjectsByStage('1');
+    }
+    
+    function displaySubjectsByStage(stage) {
+        const subjects = JSON.parse(localStorage.getItem('itlibrary_subjects') || '[]');
+        const stageSubjects = subjects.filter(subject => subject.stage === stage);
+        const tableBody = document.getElementById('subjectsTableBody');
+        
+        if (!tableBody) return;
+        
+        tableBody.innerHTML = '';
+        
+        stageSubjects.forEach(subject => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${subject.id}</td>
+                <td>${subject.name}</td>
+                <td>${subject.description}</td>
+                <td>${subject.resourcesCount}</td>
+                <td>
+                    <button class="btn-action edit-subject" onclick="editSubject('${subject.id}')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-action delete-subject" onclick="deleteSubject('${subject.id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+    
+    function loadSubjectsForUpload() {
+        const subjects = JSON.parse(localStorage.getItem('itlibrary_subjects') || '[]');
+        const select = document.getElementById('uploadSubject');
+        
+        if (!select) return;
+        
+        select.innerHTML = '<option value="">اختر المادة</option>';
+        
+        subjects.forEach(subject => {
+            const option = document.createElement('option');
+            option.value = subject.id;
+            option.textContent = `${subject.id} - ${subject.name}`;
+            select.appendChild(option);
+        });
+    }
+    
+    function loadAdminResources() {
+        const resources = JSON.parse(localStorage.getItem('itlibrary_resources') || '[]');
+        const subjects = JSON.parse(localStorage.getItem('itlibrary_subjects') || '[]');
+        const grid = document.getElementById('adminResourcesGrid');
+        
+        if (!grid) return;
+        
+        grid.innerHTML = '';
+        
+        resources.forEach(resource => {
+            const subject = subjects.find(s => s.id === resource.subjectId);
+            if (!subject) return;
+            
+            const resourceCard = document.createElement('div');
+            resourceCard.className = 'resource-card';
+            
+            let typeIcon = 'fa-file';
+            let typeClass = '';
+            if (resource.type === 'pdf') {
+                typeIcon = 'fa-file-pdf';
+                typeClass = 'pdf';
+            } else if (resource.type === 'docx') {
+                typeIcon = 'fa-file-word';
+                typeClass = 'doc';
+            } else if (resource.type === 'ppt') {
+                typeIcon = 'fa-file-powerpoint';
+                typeClass = 'ppt';
+            }
+            
+            resourceCard.innerHTML = `
+                <div class="resource-card-header ${typeClass}">
+                    <i class="fas ${typeIcon}"></i>
+                    <span class="resource-type">${resource.type.toUpperCase()}</span>
+                </div>
+                <div class="resource-card-body">
+                    <h4>${resource.title}</h4>
+                    <p class="resource-subject"><i class="fas fa-book"></i> ${subject.name}</p>
+                    <p class="resource-description">${resource.description}</p>
+                    <p class="resource-meta">
+                        <small><i class="far fa-calendar"></i> ${resource.uploadDate} | <i class="fas fa-weight"></i> ${resource.size}</small>
+                    </p>
+                </div>
+                <div class="resource-card-footer">
+                    <button class="btn-action delete-resource" onclick="deleteResource('${resource.id}')">
+                        <i class="fas fa-trash"></i> حذف
+                    </button>
+                </div>
+            `;
+            grid.appendChild(resourceCard);
+        });
+    }
+    
+    function setupAdminEvents() {
+        // تبويبات المراحل
+        document.querySelectorAll('.stage-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.stage-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                const stage = this.dataset.stage;
+                displaySubjectsByStage(stage);
+            });
+        });
+        
+        // إضافة مادة
+        document.getElementById('addSubjectBtn').addEventListener('click', function() {
+            document.getElementById('subjectModal').classList.remove('hidden');
+        });
+        
+        // رفع ملف
+        document.getElementById('resourceFile').addEventListener('change', function(e) {
+            const fileName = e.target.files[0] ? e.target.files[0].name : 'لم يتم اختيار ملف';
+            document.getElementById('fileName').textContent = fileName;
+        });
+        
+        // نموذج إضافة مادة
+        document.getElementById('subjectForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const subjectData = {
+                id: document.getElementById('subjectCode').value,
+                name: document.getElementById('subjectName').value,
+                stage: document.getElementById('modalSubjectStage').value,
+                description: document.getElementById('subjectDescription').value,
+                resourcesCount: 0
+            };
+            
+            if (addSubject(subjectData)) {
+                alert('تم إضافة المادة بنجاح');
+                document.getElementById('subjectForm').reset();
+                document.getElementById('subjectModal').classList.add('hidden');
+                loadAdminStats();
+                loadAdminSubjects();
+                loadSubjectsForUpload();
+            } else {
+                alert('خطأ: رمز المادة موجود مسبقاً');
+            }
+        });
+        
+        // نموذج رفع مصدر
+        document.getElementById('uploadResourceForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('resourceFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('يرجى اختيار ملف');
+                return;
+            }
+            
+            const resourceData = {
+                subjectId: document.getElementById('uploadSubject').value,
+                title: document.getElementById('resourceTitle').value,
+                type: document.getElementById('resourceType').value,
+                description: document.getElementById('resourceDescription').value,
+                size: formatFileSize(file.size),
+                uploadDate: new Date().toISOString().split('T')[0]
+            };
+            
+            // إنشاء رابط محاكاة للرفع (في الواقع سيتم رفع الملف إلى الخادم)
+            const url = URL.createObjectURL(file);
+            resourceData.url = url;
+            
+            // إنشاء ID للمصدر
+            const resources = JSON.parse(localStorage.getItem('itlibrary_resources') || '[]');
+            resourceData.id = 'R' + (resources.length + 1).toString().padStart(3, '0');
+            
+            if (addResource(resourceData)) {
+                alert('تم رفع المصدر بنجاح');
+                this.reset();
+                document.getElementById('fileName').textContent = 'لم يتم اختيار ملف';
+                loadAdminStats();
+                loadAdminResources();
+            } else {
+                alert('حدث خطأ أثناء رفع الملف');
+            }
+        });
+        
+        // إغلاق النوافذ
+        document.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.getElementById('subjectModal').classList.add('hidden');
+            });
+        });
+    }
+    
+    function editSubject(subjectId) {
+        alert('خاصية التعديل قيد التطوير');
+    }
+    
+    function deleteSubject(subjectId) {
+        if (confirm('هل أنت متأكد من حذف هذه المادة؟')) {
+            if (deleteSubjectFromStorage(subjectId)) {
+                alert('تم حذف المادة بنجاح');
+                loadAdminStats();
+                loadAdminSubjects();
+                loadSubjectsForUpload();
+            } else {
+                alert('حدث خطأ أثناء الحذف');
+            }
+        }
+    }
+    
+    function deleteResource(resourceId) {
+        if (confirm('هل أنت متأكد من حذف هذا المصدر؟')) {
+            if (deleteResourceFromStorage(resourceId)) {
+                alert('تم حذف المصدر بنجاح');
+                loadAdminStats();
+                loadAdminResources();
+            } else {
+                alert('حدث خطأ أثناء الحذف');
+            }
+        }
+    }
+    
+    function formatFileSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+        else return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+</script>
+<!-- حقوق النشر -->
+<div class="copyright">
+    <p>© 2023 IT Library. جميع الحقوق محفوظة.</p>
+    <p>لوحة إدارة المكتبة التقنية - للإدارة فقط</p>
+    <p>جميع البيانات محمية وفق سياسة الخصوصية</p>
+</div>
+</body>
+</html>

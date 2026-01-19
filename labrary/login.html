@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="icon" type="image/png" href="img/logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - IT Library</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="login-page">
+
+<div class="login-container">
+    <div class="login-wrapper">
+        
+        <!-- شعار العودة -->
+        <div class="login-header">
+            <a href="index.html" class="back-home">
+                <i class="fas fa-arrow-right"></i> العودة للرئيسية
+            </a>
+        </div>
+        
+        <!-- صندوق تسجيل الدخول -->
+        <div class="login-box">
+            <div class="login-logo">
+                <div class="logo-circle">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <h1>تسجيل الدخول</h1>
+                <p class="login-subtitle">أدخل بياناتك للوصول إلى المنصة</p>
+            </div>
+            
+            <!-- نموذج تسجيل الدخول -->
+            <form class="login-form" id="loginForm">
+                <div class="input-group">
+                    <label for="username">
+                        <i class="fas fa-user"></i> اسم المستخدم
+                    </label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        placeholder="أدخل اسم المستخدم"
+                        required
+                    >
+                    <div class="input-helper">
+                        اسم المستخدم المسجل في النظام
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">
+                        <i class="fas fa-lock"></i> كلمة المرور
+                    </label>
+                    <div class="password-wrapper">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            placeholder="أدخل كلمة المرور"
+                            required
+                        >
+                        <button type="button" class="toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-login">
+                    <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                </button>
+                
+                <div class="register-link">
+                    <p>طالب جديد؟ <a href="#" id="showRegister">إنشاء حساب جديد</a></p>
+                </div>
+                
+                <!-- ملاحظة للإدارة -->
+                <div class="admin-note">
+                    <i class="fas fa-info-circle"></i>
+                    <p>للدخول كمسؤول: username: <strong>admin</strong>, password: <strong>admin123</strong></p>
+                </div>
+            </form>
+            
+            <!-- نموذج التسجيل الجديد -->
+            <form class="register-form hidden" id="registerForm">
+                <div class="input-group">
+                    <label for="fullName">
+                        <i class="fas fa-id-card"></i> الاسم الكامل
+                    </label>
+                    <input 
+                        type="text" 
+                        id="fullName" 
+                        placeholder="الاسم الأول الثاني الثالث"
+                        required
+                    >
+                </div>
+                
+                <div class="input-group">
+                    <label for="newUsername">
+                        <i class="fas fa-user"></i> اسم المستخدم
+                    </label>
+                    <input 
+                        type="text" 
+                        id="newUsername" 
+                        placeholder="اختر اسم مستخدم"
+                        required
+                    >
+                </div>
+                
+                <div class="input-group">
+                    <label for="newPassword">
+                        <i class="fas fa-lock"></i> كلمة المرور
+                    </label>
+                    <input 
+                        type="password" 
+                        id="newPassword" 
+                        placeholder="اختر كلمة مرور قوية"
+                        required
+                    >
+                </div>
+                
+                <div class="input-group">
+                    <label for="stage">
+                        <i class="fas fa-graduation-cap"></i> المرحلة الدراسية
+                    </label>
+                    <select id="stage" required>
+                        <option value="">اختر المرحلة</option>
+                        <option value="1">المرحلة الأولى</option>
+                        <option value="2">المرحلة الثانية</option>
+                        <option value="3">المرحلة الثالثة</option>
+                        <option value="4">المرحلة الرابعة</option>
+                    </select>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> إنشاء الحساب
+                    </button>
+                    <button type="button" id="backToLogin" class="btn btn-secondary">
+                        <i class="fas fa-arrow-right"></i> العودة لتسجيل الدخول
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- معلومات عن النظام -->
+        <div class="login-footer">
+            <div class="security-info">
+                <i class="fas fa-shield-alt"></i>
+                <span>بياناتك محمية ولا تشارك مع طرف ثالث</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- معلومات النظام -->
+    <div class="login-info">
+        <h2>كيف يعمل النظام؟</h2>
+        <div class="info-steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>إنشاء حساب</h3>
+                    <p>سجل باسمك الكامل واختر مرحلتك الدراسية</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>الوصول للمواد</h3>
+                    <p>سترى فقط المواد الخاصة بمرحلتك الدراسية</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>تحميل المصادر</h3>
+                    <p>تصفح وحمل المصادر الخاصة بكل مادة</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/main.js"></script>
+<!-- حقوق النشر -->
+<div class="copyright">
+    <p>© 2023 IT Library. جميع الحقوق محفوظة.</p>
+    <p>تسجيل الدخول الآمن للمكتبة التقنية</p>
+</div>
+</body>
+</html>
