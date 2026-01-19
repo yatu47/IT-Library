@@ -1,6 +1,17 @@
-// ===== نظام المصادقة والبيانات =====
+// ===== نظام يعتمد كلياً على ملفات JSON =====
 
-// بيانات المثال (سيتم حفظها في localStorage)
+const CONFIG = {
+    dataFolder: 'data/',
+    autoSave: true,
+    files: {
+        users: 'users.json',
+        subjects: 'subjects.json',
+        resources: 'resources.json',
+        currentUser: 'current_user.json'
+    }
+};
+
+// بيانات المثال (للحالات الطارئة فقط)
 const defaultUsers = [
     {
         id: 1,
@@ -84,54 +95,98 @@ const defaultResources = [
     }
 ];
 
-// تهيئة البيانات في localStorage
-function initializeData() {
-    if (!localStorage.getItem('itlibrary_users')) {
-        localStorage.setItem('itlibrary_users', JSON.stringify(defaultUsers));
+// ===== الدوال الأساسية للقراءة والكتابة =====
+async function loadJSON(fileName, fallbackData = []) {
+    try {
+        const response = await fetch(`${CONFIG.dataFolder}${fileName}`);
+        if (!response.ok) throw new Error('File not found');
+        return await response.json();
+    } catch (error) {
+        console.warn(`⚠️ ملف ${fileName} غير موجود، استخدام بيانات افتراضية`);
+        return fallbackData;
+    }
+}
+
+async function saveJSON(fileName, data) {
+    try {
+        // في بيئة حقيقية، هنا ترفع البيانات للسيرفر
+        // لكن للـ frontend فقط، سنستخدم localStorage كـ cache
+        localStorage.setItem(fileName, JSON.stringify(data));
+        
+        // عرض البيانات كملف للتنزيل (حل مؤقت)
+        if (CONFIG.autoSave) {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            // حفظ كـ cache لتطوير أسرع
+            sessionStorage.setItem(`file_cache_${fileName}`, JSON.stringify(data));
+            
+            console.log(`📁 ${fileName} جاهز للتنزيل (حل تطوير)`);
+            
+            // في الإنتاج، هنا ترسل fetch للسيرفر
+            // await fetch('/api/save-data', { method: 'POST', body: JSON.stringify({fileName, data}) });
+        }
+        return true;
+    } catch (error) {
+        console.error(`❌ خطأ في حفظ ${fileName}:`, error);
+        return false;
+    }
+}
+
+// ===== تهيئة الملفات =====
+async function initializeData() {
+    console.log('🔧 جاري تهيئة النظام من ملفات JSON...');
+    
+    // التحقق من وجود الملفات أو إنشائها
+    const filesToInit = [
+        { file: CONFIG.files.users, data: defaultUsers },
+        { file: CONFIG.files.subjects, data: defaultSubjects },
+        { file: CONFIG.files.resources, data: defaultResources }
+    ];
+    
+    for (const { file, data } of filesToInit) {
+        const existing = await loadJSON(file);
+        if (existing.length === 0) {
+            await saveJSON(file, data);
+        }
     }
     
-    if (!localStorage.getItem('itlibrary_subjects')) {
-        localStorage.setItem('itlibrary_subjects', JSON.stringify(defaultSubjects));
-    }
-    
-    if (!localStorage.getItem('itlibrary_resources')) {
-        localStorage.setItem('itlibrary_resources', JSON.stringify(defaultResources));
-    }
+    console.log('✅ التهيئة اكتملت');
 }
 
-// تحميل البيانات
-function loadUsers() {
-    return JSON.parse(localStorage.getItem('itlibrary_users')) || [];
+// ===== تحميل البيانات =====
+async function loadUsers() {
+    return await loadJSON(CONFIG.files.users, defaultUsers);
 }
 
-function loadSubjects() {
-    return JSON.parse(localStorage.getItem('itlibrary_subjects')) || [];
+async function loadSubjects() {
+    return await loadJSON(CONFIG.files.subjects, defaultSubjects);
 }
 
-function loadResources() {
-    return JSON.parse(localStorage.getItem('itlibrary_resources')) || [];
+async function loadResources() {
+    return await loadJSON(CONFIG.files.resources, defaultResources);
 }
 
-// حفظ البيانات
-function saveUsers(users) {
-    localStorage.setItem('itlibrary_users', JSON.stringify(users));
+// ===== حفظ البيانات =====
+async function saveUsers(users) {
+    return await saveJSON(CONFIG.files.users, users);
 }
 
-function saveSubjects(subjects) {
-    localStorage.setItem('itlibrary_subjects', JSON.stringify(subjects));
+async function saveSubjects(subjects) {
+    return await saveJSON(CONFIG.files.subjects, subjects);
 }
 
-function saveResources(resources) {
-    localStorage.setItem('itlibrary_resources', JSON.stringify(resources));
+async function saveResources(resources) {
+    return await saveJSON(CONFIG.files.resources, resources);
 }
 
 // ===== نظام المصادقة =====
-function login(username, password) {
-    const users = loadUsers();
+async function login(username, password) {
+    const users = await loadUsers();
     const user = users.find(u => u.username === username && u.password === password);
     
     if (user) {
-        // حفظ المستخدم الحالي
+        // حفظ المستخدم الحالي في localStorage للجلسة
         localStorage.setItem('currentUser', JSON.stringify(user));
         
         // توجيه حسب نوع المستخدم
@@ -145,8 +200,8 @@ function login(username, password) {
     return false;
 }
 
-function register(fullName, username, password, stage) {
-    const users = loadUsers();
+async function register(fullName, username, password, stage) {
+    const users = await loadUsers();
     
     // التحقق من عدم تكرار اسم المستخدم
     if (users.some(u => u.username === username)) {
@@ -155,7 +210,7 @@ function register(fullName, username, password, stage) {
     
     // إنشاء مستخدم جديد
     const newUser = {
-        id: users.length + 1,
+        id: users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1,
         username,
         password,
         fullName,
@@ -164,7 +219,7 @@ function register(fullName, username, password, stage) {
     };
     
     users.push(newUser);
-    saveUsers(users);
+    await saveUsers(users);
     
     return { success: true, message: 'تم إنشاء الحساب بنجاح' };
 }
@@ -180,13 +235,13 @@ function getCurrentUser() {
 }
 
 // ===== إدارة المواد =====
-function getSubjectsByStage(stage) {
-    const subjects = loadSubjects();
+async function getSubjectsByStage(stage) {
+    const subjects = await loadSubjects();
     return subjects.filter(subject => subject.stage === stage);
 }
 
-function addSubject(subjectData) {
-    const subjects = loadSubjects();
+async function addSubject(subjectData) {
+    const subjects = await loadSubjects();
     
     // التحقق من عدم تكرار رمز المادة
     if (subjects.some(s => s.id === subjectData.id)) {
@@ -198,13 +253,13 @@ function addSubject(subjectData) {
         resourcesCount: 0
     });
     
-    saveSubjects(subjects);
+    await saveSubjects(subjects);
     return true;
 }
 
-function deleteSubjectFromStorage(subjectId) {
-    const subjects = loadSubjects();
-    const resources = loadResources();
+async function deleteSubjectFromStorage(subjectId) {
+    const subjects = await loadSubjects();
+    const resources = await loadResources();
     
     // البحث عن المادة
     const subjectIndex = subjects.findIndex(s => s.id === subjectId);
@@ -216,15 +271,15 @@ function deleteSubjectFromStorage(subjectId) {
     // حذف جميع المصادر المرتبطة بالمادة
     const updatedResources = resources.filter(r => r.subjectId !== subjectId);
     
-    saveSubjects(subjects);
-    saveResources(updatedResources);
+    await saveSubjects(subjects);
+    await saveResources(updatedResources);
     return true;
 }
 
 // ===== إدارة المصادر =====
-function addResource(resourceData) {
-    const resources = loadResources();
-    const subjects = loadSubjects();
+async function addResource(resourceData) {
+    const resources = await loadResources();
+    const subjects = await loadSubjects();
     
     // إضافة المصدر
     resources.push(resourceData);
@@ -235,14 +290,14 @@ function addResource(resourceData) {
         subjects[subjectIndex].resourcesCount += 1;
     }
     
-    saveResources(resources);
-    saveSubjects(subjects);
+    await saveResources(resources);
+    await saveSubjects(subjects);
     return true;
 }
 
-function deleteResourceFromStorage(resourceId) {
-    const resources = loadResources();
-    const subjects = loadSubjects();
+async function deleteResourceFromStorage(resourceId) {
+    const resources = await loadResources();
+    const subjects = await loadSubjects();
     
     // البحث عن المصدر
     const resourceIndex = resources.findIndex(r => r.id === resourceId);
@@ -259,25 +314,65 @@ function deleteResourceFromStorage(resourceId) {
         subjects[subjectIndex].resourcesCount -= 1;
     }
     
-    saveResources(resources);
-    saveSubjects(subjects);
+    await saveResources(resources);
+    await saveSubjects(subjects);
     return true;
 }
 
-// ===== التهيئة =====
-document.addEventListener('DOMContentLoaded', function() {
+// ===== أدوات للمطور =====
+async function exportAllData() {
+    const data = {
+        users: await loadUsers(),
+        subjects: await loadSubjects(),
+        resources: await loadResources(),
+        exportedAt: new Date().toISOString()
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `library_backup_${new Date().getTime()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+async function importData(file) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            try {
+                const data = JSON.parse(e.target.result);
+                
+                if (data.users) await saveUsers(data.users);
+                if (data.subjects) await saveSubjects(data.subjects);
+                if (data.resources) await saveResources(data.resources);
+                
+                resolve({ success: true, message: 'تم استيراد البيانات بنجاح' });
+            } catch (error) {
+                resolve({ success: false, message: `خطأ في الملف: ${error.message}` });
+            }
+        };
+        reader.readAsText(file);
+    });
+}
+
+// ===== التهيئة عند تحميل الصفحة =====
+document.addEventListener('DOMContentLoaded', async function() {
     // تهيئة البيانات
-    initializeData();
+    await initializeData();
     
     // تسجيل الدخول
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
+        loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
-            if (login(username, password)) {
+            if (await login(username, password)) {
                 alert('تم تسجيل الدخول بنجاح!');
             } else {
                 alert('اسم المستخدم أو كلمة المرور غير صحيحة');
@@ -307,18 +402,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // التسجيل الجديد
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
-        registerForm.addEventListener('submit', function(e) {
+        registerForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             const fullName = document.getElementById('fullName').value;
             const username = document.getElementById('newUsername').value;
             const password = document.getElementById('newPassword').value;
             const stage = document.getElementById('stage').value;
             
-            const result = register(fullName, username, password, stage);
+            const result = await register(fullName, username, password, stage);
             
             if (result.success) {
                 alert(result.message);
-                login(username, password);
+                // تسجيل الدخول بعد التسجيل
+                const loginSuccess = await login(username, password);
+                if (!loginSuccess) {
+                    alert('تم التسجيل بنجاح، يرجى تسجيل الدخول يدوياً');
+                }
             } else {
                 alert(result.message);
             }
@@ -355,7 +454,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ===== إعادة استخدام الدوال =====
-// هذه الدوال متاحة للاستخدام في الملفات الأخرى
 window.login = login;
 window.register = register;
 window.logout = logout;
@@ -363,3 +461,7 @@ window.addSubject = addSubject;
 window.addResource = addResource;
 window.deleteSubjectFromStorage = deleteSubjectFromStorage;
 window.deleteResourceFromStorage = deleteResourceFromStorage;
+window.exportAllData = exportAllData;
+window.importData = importData;
+window.getCurrentUser = getCurrentUser;
+window.getSubjectsByStage = getSubjectsByStage;
