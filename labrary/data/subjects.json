@@ -40,5 +40,131 @@
         "stage": "1",
         "description": "مبادئ نظم تشغيل الحاسوب",
         "resourcesCount": 0
+    },
+    {
+        "id": "IT201",
+        "name": "برمجة الويب",
+        "stage": "2",
+        "description": "برمجة مواقع الويب باستخدام HTML, CSS, JavaScript",
+        "resourcesCount": 1
+    },
+    {
+        "id": "IT202",
+        "name": "قواعد البيانات المتقدمة",
+        "stage": "2",
+        "description": "تصميم قواعد البيانات العلائقية وإدارة النظم",
+        "resourcesCount": 0
+    },
+    {
+        "id": "IT203",
+        "name": "هندسة البرمجيات",
+        "stage": "2",
+        "description": "مبادئ هندسة البرمجيات ودورة حياة المشاريع",
+        "resourcesCount": 0
+    },
+    {
+        "id": "IT204",
+        "name": "برمجة كائنية التوجه",
+        "stage": "2",
+        "description": "مفاهيم البرمجة الكائنية باستخدام Java",
+        "resourcesCount": 0
+    },
+    {
+        "id": "IT205",
+        "name": "شبكات الحاسوب",
+        "stage": "2",
+        "description": "بروتوكولات الشبكات وتصميم البنى التحتية",
+        "resourcesCount": 0
+    },
+    {
+        "id": "IT206",
+        "name": "التحليل العددي",
+        "stage": "2",
+        "description": "الخوارزميات العددية وحل المعادلات الرياضية",
+        "resourcesCount": 0
+    },
+    {
+        "id": "IT301",
+        "name": "الذكاء الاصطناعي",
+        "stage": "3",
+        "description": "مقدمة في الذكاء الاصطناعي وتعلم الآلة",
+        "resourcesCount": 0
+    },
+    {
+        "id": "IT302",
+        "name": "أمن المعلومات",
+        "stage": "3",
+        "description": "مبادئ أمن الشبكات وحماية البيانات",
+        "resourcesCount": 0
+    },
+    {
+        "id": "IT303",
+        "name": "برمجة التطبيقات النقالة",
+        "stage": "3",
+        "description": "تطوير تطبيقات الهواتف الذكية",
+        "resourcesCount": 0
+    },
+    {
+        "id": "IT304",
+        "name": "قواعد البيانات الموزعة",
+        "stage": "3",
+        "description": "تصميم وإدارة قواعد البيانات الموزعة",
+        "resourcesCount": 0
+    },
+    {
+        "id": "IT305",
+        "name": "واجهات المستخدم",
+        "stage": "3",
+        "description": "تصميم واجهات المستخدم وتجربة المستخدم",
+        "resourcesCount": 0
+    },
+    {
+        "id": "IT306",
+        "name": "الحوسبة السحابية",
+        "stage": "3",
+        "description": "مفاهيم الحوسبة السحابية وتقنياتها",
+        "resourcesCount": 0
+    },
+    {
+        "id": "IT401",
+        "name": "علم البيانات",
+        "stage": "4",
+        "description": "تحليل البيانات الضخمة وتطبيقاتها",
+        "resourcesCount": 0
+    },
+    {
+        "id": "IT402",
+        "name": "إنترنت الأشياء",
+        "stage": "4",
+        "description": "تطبيقات إنترنت الأشياء وتقنياتها",
+        "resourcesCount": 0
+    },
+    {
+        "id": "IT403",
+        "name": "الواقع الافتراضي",
+        "stage": "4",
+        "description": "تقنيات الواقع الافتراضي والمعزز",
+        "resourcesCount": 0
+    },
+    {
+        "id": "IT404",
+        "name": "إدارة مشاريع تكنولوجيا المعلومات",
+        "stage": "4",
+        "description": "إدارة مشاريع البرمجيات وتخطيطها",
+        "resourcesCount": 0
+    },
+    {
+        "id": "IT405",
+        "name": "البلوك تشين",
+        "stage": "4",
+        "description": "تقنيات البلوك تشين والعملات الرقمية",
+        "resourcesCount": 0
+    },
+    {
+        "id": "IT406",
+        "name": "مشروع التخرج",
+        "stage": "4",
+        "description": "تطبيق شامل للمعارف المكتسبة في مشروع نهائي",
+        "resourcesCount": 0
     }
 ]
