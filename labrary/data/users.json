@@ -28,8 +28,42 @@
         "username": "yatu",
         "password": "12345",
         "fullName": "الصانع",
-        "stage": "3",
+        "stage": "1",
         "createdAt": "2023-01-01"
-    }
+    },
 
+{
+        "id": 5,
+        "username": "hyiiop",
+        "password": "hassa2005n",
+        "fullName": "حسن عدي حسن",
+        "stage": "3",
+        "createdAt": "2023-01-01"
+    },
+
+{
+        "id": 6,
+        "username": "FADL",
+        "password": "FAD2004L",
+        "fullName": "أبو الفضل محمد جاسم",
+        "stage": "3",
+        "createdAt": "2023-01-01"
+    },
+    {
+        "id": 7,
+        "username": "HUSSEIN",
+        "password": "HUSSEI2003N",
+        "fullName": "الحسين سعد خلف",
+        "stage": "3",
+        "createdAt": "2023-01-01"
+    },
+    {
+        "id": 8,
+        "username": "Ibrahem",
+        "password": "Ibrahe2004m",
+        "fullName": "إبراهيم علاء جواد",
+        "stage": "3",
+        "createdAt": "2023-01-01"
+    }
 ]
+
